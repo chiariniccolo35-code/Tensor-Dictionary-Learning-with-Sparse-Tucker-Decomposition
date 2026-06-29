@@ -1,0 +1,18 @@
+# MATLAB
+*.asv
+*.m~
+slprj/
+
+# Large/raw data (excluded by design - see data/README.md)
+coil-100/
+*.dcm
+4DCT-Dicom/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
