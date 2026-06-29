@@ -1,0 +1,38 @@
+clear
+A=dicomreadVolume('90');
+A=squeeze(A);
+A=imresize3(A,[151,125,141]);
+A=rescale(A,0,1);
+P=A;
+Y=tensor(A);
+Y_1=unfold(Y,1);
+Y_2=unfold(Y,2);
+Y_3=unfold(Y,3);
+I1=151;
+I2=125;
+I3=141;
+M5=floor(151*1.5);
+M6=floor(I2*1.5);
+M7=floor(I3*1.5);
+[A,~,~]=svds(Y_1,I1);
+A=overcomplete_dict(A,M5);
+[B,~,~]=svds(Y_2,I2);
+B=overcomplete_dict(B,M6);
+[C,S,V]=svds(Y_3,I3);
+C=overcomplete_dict(C,M7);
+A2=A;
+B2=B;
+C2=C;
+for l=1:2
+    [E,E2,M1,M2,M3,r,r2]=efficientTOMP3(A,B,C,A2,B2,C2,P,30000,0.001,1000);
+    r2
+    X=sptensor([],[],[M5,M6,M7]);
+    E=sptensor(E);
+    X(M1,M2,M3)=E;
+    X2=sptensor([],[],[M5,M6,M7]);
+    E2=sptensor(E2);
+    X2(M1,M2,M3)=E2;
+    [A,B,C,X_cb,A0,B0,C0,resto3]=GradTensor(Y,tensor(X),0.1,0.0001,A,B,C,500);
+    [A2,B2,C2,X_cb,A0,B0,C0,resto3]=GradTensor(Y,tensor(X2),0.1,0.0001,A2,B2,C2,500);
+
+end
